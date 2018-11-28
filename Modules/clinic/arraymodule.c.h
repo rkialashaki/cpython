@@ -65,23 +65,19 @@ PyDoc_STRVAR(array_array_pop__doc__,
 "i defaults to -1.");
 
 #define ARRAY_ARRAY_POP_METHODDEF    \
-    {"pop", (PyCFunction)array_array_pop, METH_FASTCALL, array_array_pop__doc__},
+    {"pop", (PyCFunction)(void(*)(void))array_array_pop, METH_FASTCALL, array_array_pop__doc__},
 
 static PyObject *
 array_array_pop_impl(arrayobject *self, Py_ssize_t i);
 
 static PyObject *
-array_array_pop(arrayobject *self, PyObject **args, Py_ssize_t nargs, PyObject *kwnames)
+array_array_pop(arrayobject *self, PyObject *const *args, Py_ssize_t nargs)
 {
     PyObject *return_value = NULL;
     Py_ssize_t i = -1;
 
     if (!_PyArg_ParseStack(args, nargs, "|n:pop",
         &i)) {
-        goto exit;
-    }
-
-    if (!_PyArg_NoStackKeywords("pop", kwnames)) {
         goto exit;
     }
     return_value = array_array_pop_impl(self, i);
@@ -106,13 +102,13 @@ PyDoc_STRVAR(array_array_insert__doc__,
 "Insert a new item v into the array before position i.");
 
 #define ARRAY_ARRAY_INSERT_METHODDEF    \
-    {"insert", (PyCFunction)array_array_insert, METH_FASTCALL, array_array_insert__doc__},
+    {"insert", (PyCFunction)(void(*)(void))array_array_insert, METH_FASTCALL, array_array_insert__doc__},
 
 static PyObject *
 array_array_insert_impl(arrayobject *self, Py_ssize_t i, PyObject *v);
 
 static PyObject *
-array_array_insert(arrayobject *self, PyObject **args, Py_ssize_t nargs, PyObject *kwnames)
+array_array_insert(arrayobject *self, PyObject *const *args, Py_ssize_t nargs)
 {
     PyObject *return_value = NULL;
     Py_ssize_t i;
@@ -120,10 +116,6 @@ array_array_insert(arrayobject *self, PyObject **args, Py_ssize_t nargs, PyObjec
 
     if (!_PyArg_ParseStack(args, nargs, "nO:insert",
         &i, &v)) {
-        goto exit;
-    }
-
-    if (!_PyArg_NoStackKeywords("insert", kwnames)) {
         goto exit;
     }
     return_value = array_array_insert_impl(self, i, v);
@@ -208,13 +200,13 @@ PyDoc_STRVAR(array_array_fromfile__doc__,
 "Read n objects from the file object f and append them to the end of the array.");
 
 #define ARRAY_ARRAY_FROMFILE_METHODDEF    \
-    {"fromfile", (PyCFunction)array_array_fromfile, METH_FASTCALL, array_array_fromfile__doc__},
+    {"fromfile", (PyCFunction)(void(*)(void))array_array_fromfile, METH_FASTCALL, array_array_fromfile__doc__},
 
 static PyObject *
 array_array_fromfile_impl(arrayobject *self, PyObject *f, Py_ssize_t n);
 
 static PyObject *
-array_array_fromfile(arrayobject *self, PyObject **args, Py_ssize_t nargs, PyObject *kwnames)
+array_array_fromfile(arrayobject *self, PyObject *const *args, Py_ssize_t nargs)
 {
     PyObject *return_value = NULL;
     PyObject *f;
@@ -222,10 +214,6 @@ array_array_fromfile(arrayobject *self, PyObject **args, Py_ssize_t nargs, PyObj
 
     if (!_PyArg_ParseStack(args, nargs, "On:fromfile",
         &f, &n)) {
-        goto exit;
-    }
-
-    if (!_PyArg_NoStackKeywords("fromfile", kwnames)) {
         goto exit;
     }
     return_value = array_array_fromfile_impl(self, f, n);
@@ -455,7 +443,7 @@ PyDoc_STRVAR(array__array_reconstructor__doc__,
 "Internal. Used for pickling support.");
 
 #define ARRAY__ARRAY_RECONSTRUCTOR_METHODDEF    \
-    {"_array_reconstructor", (PyCFunction)array__array_reconstructor, METH_FASTCALL, array__array_reconstructor__doc__},
+    {"_array_reconstructor", (PyCFunction)(void(*)(void))array__array_reconstructor, METH_FASTCALL, array__array_reconstructor__doc__},
 
 static PyObject *
 array__array_reconstructor_impl(PyObject *module, PyTypeObject *arraytype,
@@ -464,7 +452,7 @@ array__array_reconstructor_impl(PyObject *module, PyTypeObject *arraytype,
                                 PyObject *items);
 
 static PyObject *
-array__array_reconstructor(PyObject *module, PyObject **args, Py_ssize_t nargs, PyObject *kwnames)
+array__array_reconstructor(PyObject *module, PyObject *const *args, Py_ssize_t nargs)
 {
     PyObject *return_value = NULL;
     PyTypeObject *arraytype;
@@ -474,10 +462,6 @@ array__array_reconstructor(PyObject *module, PyObject **args, Py_ssize_t nargs, 
 
     if (!_PyArg_ParseStack(args, nargs, "OCiO:_array_reconstructor",
         &arraytype, &typecode, &mformat_code, &items)) {
-        goto exit;
-    }
-
-    if (!_PyArg_NoStackKeywords("_array_reconstructor", kwnames)) {
         goto exit;
     }
     return_value = array__array_reconstructor_impl(module, arraytype, typecode, mformat_code, items);
@@ -521,4 +505,4 @@ PyDoc_STRVAR(array_arrayiterator___setstate____doc__,
 
 #define ARRAY_ARRAYITERATOR___SETSTATE___METHODDEF    \
     {"__setstate__", (PyCFunction)array_arrayiterator___setstate__, METH_O, array_arrayiterator___setstate____doc__},
-/*[clinic end generated code: output=d186a7553c1f1a41 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=3a4c6f3deb597bfd input=a9049054013a1b77]*/

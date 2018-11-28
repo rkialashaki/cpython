@@ -14,13 +14,13 @@ PyDoc_STRVAR(crypt_crypt__doc__,
 "results for a given *word*.");
 
 #define CRYPT_CRYPT_METHODDEF    \
-    {"crypt", (PyCFunction)crypt_crypt, METH_FASTCALL, crypt_crypt__doc__},
+    {"crypt", (PyCFunction)(void(*)(void))crypt_crypt, METH_FASTCALL, crypt_crypt__doc__},
 
 static PyObject *
 crypt_crypt_impl(PyObject *module, const char *word, const char *salt);
 
 static PyObject *
-crypt_crypt(PyObject *module, PyObject **args, Py_ssize_t nargs, PyObject *kwnames)
+crypt_crypt(PyObject *module, PyObject *const *args, Py_ssize_t nargs)
 {
     PyObject *return_value = NULL;
     const char *word;
@@ -30,13 +30,9 @@ crypt_crypt(PyObject *module, PyObject **args, Py_ssize_t nargs, PyObject *kwnam
         &word, &salt)) {
         goto exit;
     }
-
-    if (!_PyArg_NoStackKeywords("crypt", kwnames)) {
-        goto exit;
-    }
     return_value = crypt_crypt_impl(module, word, salt);
 
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=3fd5d3625a6f32fe input=a9049054013a1b77]*/
+/*[clinic end generated code: output=79001dbfdd623ff9 input=a9049054013a1b77]*/

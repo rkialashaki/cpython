@@ -60,13 +60,13 @@ PyDoc_STRVAR(resource_setrlimit__doc__,
 "\n");
 
 #define RESOURCE_SETRLIMIT_METHODDEF    \
-    {"setrlimit", (PyCFunction)resource_setrlimit, METH_FASTCALL, resource_setrlimit__doc__},
+    {"setrlimit", (PyCFunction)(void(*)(void))resource_setrlimit, METH_FASTCALL, resource_setrlimit__doc__},
 
 static PyObject *
 resource_setrlimit_impl(PyObject *module, int resource, PyObject *limits);
 
 static PyObject *
-resource_setrlimit(PyObject *module, PyObject **args, Py_ssize_t nargs, PyObject *kwnames)
+resource_setrlimit(PyObject *module, PyObject *const *args, Py_ssize_t nargs)
 {
     PyObject *return_value = NULL;
     int resource;
@@ -74,10 +74,6 @@ resource_setrlimit(PyObject *module, PyObject **args, Py_ssize_t nargs, PyObject
 
     if (!_PyArg_ParseStack(args, nargs, "iO:setrlimit",
         &resource, &limits)) {
-        goto exit;
-    }
-
-    if (!_PyArg_NoStackKeywords("setrlimit", kwnames)) {
         goto exit;
     }
     return_value = resource_setrlimit_impl(module, resource, limits);
@@ -161,4 +157,4 @@ exit:
 #ifndef RESOURCE_PRLIMIT_METHODDEF
     #define RESOURCE_PRLIMIT_METHODDEF
 #endif /* !defined(RESOURCE_PRLIMIT_METHODDEF) */
-/*[clinic end generated code: output=3af613da48e0f8c9 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=637ed2c42bde5ca6 input=a9049054013a1b77]*/

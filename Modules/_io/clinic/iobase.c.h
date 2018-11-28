@@ -174,23 +174,19 @@ PyDoc_STRVAR(_io__IOBase_readline__doc__,
 "terminator(s) recognized.");
 
 #define _IO__IOBASE_READLINE_METHODDEF    \
-    {"readline", (PyCFunction)_io__IOBase_readline, METH_FASTCALL, _io__IOBase_readline__doc__},
+    {"readline", (PyCFunction)(void(*)(void))_io__IOBase_readline, METH_FASTCALL, _io__IOBase_readline__doc__},
 
 static PyObject *
 _io__IOBase_readline_impl(PyObject *self, Py_ssize_t limit);
 
 static PyObject *
-_io__IOBase_readline(PyObject *self, PyObject **args, Py_ssize_t nargs, PyObject *kwnames)
+_io__IOBase_readline(PyObject *self, PyObject *const *args, Py_ssize_t nargs)
 {
     PyObject *return_value = NULL;
     Py_ssize_t limit = -1;
 
     if (!_PyArg_ParseStack(args, nargs, "|O&:readline",
         _Py_convert_optional_to_ssize_t, &limit)) {
-        goto exit;
-    }
-
-    if (!_PyArg_NoStackKeywords("readline", kwnames)) {
         goto exit;
     }
     return_value = _io__IOBase_readline_impl(self, limit);
@@ -210,23 +206,19 @@ PyDoc_STRVAR(_io__IOBase_readlines__doc__,
 "lines so far exceeds hint.");
 
 #define _IO__IOBASE_READLINES_METHODDEF    \
-    {"readlines", (PyCFunction)_io__IOBase_readlines, METH_FASTCALL, _io__IOBase_readlines__doc__},
+    {"readlines", (PyCFunction)(void(*)(void))_io__IOBase_readlines, METH_FASTCALL, _io__IOBase_readlines__doc__},
 
 static PyObject *
 _io__IOBase_readlines_impl(PyObject *self, Py_ssize_t hint);
 
 static PyObject *
-_io__IOBase_readlines(PyObject *self, PyObject **args, Py_ssize_t nargs, PyObject *kwnames)
+_io__IOBase_readlines(PyObject *self, PyObject *const *args, Py_ssize_t nargs)
 {
     PyObject *return_value = NULL;
     Py_ssize_t hint = -1;
 
     if (!_PyArg_ParseStack(args, nargs, "|O&:readlines",
         _Py_convert_optional_to_ssize_t, &hint)) {
-        goto exit;
-    }
-
-    if (!_PyArg_NoStackKeywords("readlines", kwnames)) {
         goto exit;
     }
     return_value = _io__IOBase_readlines_impl(self, hint);
@@ -249,23 +241,19 @@ PyDoc_STRVAR(_io__RawIOBase_read__doc__,
 "\n");
 
 #define _IO__RAWIOBASE_READ_METHODDEF    \
-    {"read", (PyCFunction)_io__RawIOBase_read, METH_FASTCALL, _io__RawIOBase_read__doc__},
+    {"read", (PyCFunction)(void(*)(void))_io__RawIOBase_read, METH_FASTCALL, _io__RawIOBase_read__doc__},
 
 static PyObject *
 _io__RawIOBase_read_impl(PyObject *self, Py_ssize_t n);
 
 static PyObject *
-_io__RawIOBase_read(PyObject *self, PyObject **args, Py_ssize_t nargs, PyObject *kwnames)
+_io__RawIOBase_read(PyObject *self, PyObject *const *args, Py_ssize_t nargs)
 {
     PyObject *return_value = NULL;
     Py_ssize_t n = -1;
 
     if (!_PyArg_ParseStack(args, nargs, "|n:read",
         &n)) {
-        goto exit;
-    }
-
-    if (!_PyArg_NoStackKeywords("read", kwnames)) {
         goto exit;
     }
     return_value = _io__RawIOBase_read_impl(self, n);
@@ -291,4 +279,4 @@ _io__RawIOBase_readall(PyObject *self, PyObject *Py_UNUSED(ignored))
 {
     return _io__RawIOBase_readall_impl(self);
 }
-/*[clinic end generated code: output=d3f59c135231baae input=a9049054013a1b77]*/
+/*[clinic end generated code: output=cde4b0e96a4e69e3 input=a9049054013a1b77]*/

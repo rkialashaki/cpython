@@ -11,14 +11,14 @@ PyDoc_STRVAR(tuple_index__doc__,
 "Raises ValueError if the value is not present.");
 
 #define TUPLE_INDEX_METHODDEF    \
-    {"index", (PyCFunction)tuple_index, METH_FASTCALL, tuple_index__doc__},
+    {"index", (PyCFunction)(void(*)(void))tuple_index, METH_FASTCALL, tuple_index__doc__},
 
 static PyObject *
 tuple_index_impl(PyTupleObject *self, PyObject *value, Py_ssize_t start,
                  Py_ssize_t stop);
 
 static PyObject *
-tuple_index(PyTupleObject *self, PyObject **args, Py_ssize_t nargs, PyObject *kwnames)
+tuple_index(PyTupleObject *self, PyObject *const *args, Py_ssize_t nargs)
 {
     PyObject *return_value = NULL;
     PyObject *value;
@@ -27,10 +27,6 @@ tuple_index(PyTupleObject *self, PyObject **args, Py_ssize_t nargs, PyObject *kw
 
     if (!_PyArg_ParseStack(args, nargs, "O|O&O&:index",
         &value, _PyEval_SliceIndexNotNone, &start, _PyEval_SliceIndexNotNone, &stop)) {
-        goto exit;
-    }
-
-    if (!_PyArg_NoStackKeywords("index", kwnames)) {
         goto exit;
     }
     return_value = tuple_index_impl(self, value, start, stop);
@@ -99,4 +95,4 @@ tuple___getnewargs__(PyTupleObject *self, PyObject *Py_UNUSED(ignored))
 {
     return tuple___getnewargs___impl(self);
 }
-/*[clinic end generated code: output=145bcfff64e8c809 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=0a6ebd2d16b09c5d input=a9049054013a1b77]*/

@@ -9,6 +9,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer, \
 from http import server, HTTPStatus
 
 import os
+import socket
 import sys
 import re
 import base64
@@ -22,12 +23,13 @@ import urllib.parse
 import tempfile
 import time
 import datetime
+import threading
 from unittest import mock
 from io import BytesIO
 
 import unittest
 from test import support
-threading = support.import_module('threading')
+
 
 class NoLogRequestHandler:
     def log_message(self, *args):
@@ -56,6 +58,7 @@ class TestServerThread(threading.Thread):
 
     def stop(self):
         self.server.shutdown()
+        self.join()
 
 
 class BaseTestCase(unittest.TestCase):
@@ -335,9 +338,11 @@ class SimpleHTTPServerTestCase(BaseTestCase):
         self.tempdir = tempfile.mkdtemp(dir=basetempdir)
         self.tempdir_name = os.path.basename(self.tempdir)
         self.base_url = '/' + self.tempdir_name
-        with open(os.path.join(self.tempdir, 'test'), 'wb') as temp:
+        tempname = os.path.join(self.tempdir, 'test')
+        with open(tempname, 'wb') as temp:
             temp.write(self.data)
-            mtime = os.fstat(temp.fileno()).st_mtime
+            temp.flush()
+        mtime = os.stat(tempname).st_mtime
         # compute last modification datetime for browser cache tests
         last_modif = datetime.datetime.fromtimestamp(mtime,
             datetime.timezone.utc)
@@ -380,7 +385,8 @@ class SimpleHTTPServerTestCase(BaseTestCase):
         reader.close()
         return body
 
-    @support.requires_mac_ver(10, 5)
+    @unittest.skipIf(sys.platform == 'darwin',
+                     'undecodable name cannot always be decoded on macOS')
     @unittest.skipIf(sys.platform == 'win32',
                      'undecodable name cannot be decoded on win32')
     @unittest.skipUnless(support.TESTFN_UNDECODABLE,
@@ -471,7 +477,7 @@ class SimpleHTTPServerTestCase(BaseTestCase):
         headers['If-Modified-Since'] = email.utils.format_datetime(new_dt,
             usegmt=True)
         response = self.request(self.base_url + '/test', headers=headers)
-        self.check_status_and_reason(response, HTTPStatus.NOT_MODIFIED)        
+        self.check_status_and_reason(response, HTTPStatus.NOT_MODIFIED)
 
     def test_browser_cache_file_changed(self):
         # with If-Modified-Since earlier than Last-Modified, must return 200
@@ -491,7 +497,7 @@ class SimpleHTTPServerTestCase(BaseTestCase):
         headers['If-Modified-Since'] = self.last_modif_header
         headers['If-None-Match'] = "*"
         response = self.request(self.base_url + '/test', headers=headers)
-        self.check_status_and_reason(response, HTTPStatus.OK)        
+        self.check_status_and_reason(response, HTTPStatus.OK)
 
     def test_invalid_requests(self):
         response = self.request('/', method='FOO')
@@ -1111,6 +1117,24 @@ class MiscTestCase(unittest.TestCase):
         self.assertCountEqual(server.__all__, expected)
 
 
+class ScriptTestCase(unittest.TestCase):
+    @mock.patch('builtins.print')
+    def test_server_test_ipv6(self, _):
+        mock_server = mock.MagicMock()
+        server.test(ServerClass=mock_server, bind="::")
+        self.assertEqual(mock_server.address_family, socket.AF_INET6)
+
+        mock_server.reset_mock()
+        server.test(ServerClass=mock_server,
+                    bind="2001:0db8:85a3:0000:0000:8a2e:0370:7334")
+        self.assertEqual(mock_server.address_family, socket.AF_INET6)
+
+        mock_server.reset_mock()
+        server.test(ServerClass=mock_server,
+                    bind="::1")
+        self.assertEqual(mock_server.address_family, socket.AF_INET6)
+
+
 def test_main(verbose=None):
     cwd = os.getcwd()
     try:
@@ -1122,6 +1146,7 @@ def test_main(verbose=None):
             CGIHTTPServerTestCase,
             SimpleHTTPRequestHandlerTestCase,
             MiscTestCase,
+            ScriptTestCase
         )
     finally:
         os.chdir(cwd)

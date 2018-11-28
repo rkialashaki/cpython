@@ -47,13 +47,13 @@ PyDoc_STRVAR(float___round____doc__,
 "When an argument is passed, work like built-in round(x, ndigits).");
 
 #define FLOAT___ROUND___METHODDEF    \
-    {"__round__", (PyCFunction)float___round__, METH_FASTCALL, float___round____doc__},
+    {"__round__", (PyCFunction)(void(*)(void))float___round__, METH_FASTCALL, float___round____doc__},
 
 static PyObject *
 float___round___impl(PyObject *self, PyObject *o_ndigits);
 
 static PyObject *
-float___round__(PyObject *self, PyObject **args, Py_ssize_t nargs, PyObject *kwnames)
+float___round__(PyObject *self, PyObject *const *args, Py_ssize_t nargs)
 {
     PyObject *return_value = NULL;
     PyObject *o_ndigits = NULL;
@@ -61,10 +61,6 @@ float___round__(PyObject *self, PyObject **args, Py_ssize_t nargs, PyObject *kwn
     if (!_PyArg_UnpackStack(args, nargs, "__round__",
         0, 1,
         &o_ndigits)) {
-        goto exit;
-    }
-
-    if (!_PyArg_NoStackKeywords("__round__", kwnames)) {
         goto exit;
     }
     return_value = float___round___impl(self, o_ndigits);
@@ -260,14 +256,14 @@ PyDoc_STRVAR(float___set_format____doc__,
 "This affects how floats are converted to and from binary strings.");
 
 #define FLOAT___SET_FORMAT___METHODDEF    \
-    {"__set_format__", (PyCFunction)float___set_format__, METH_FASTCALL|METH_CLASS, float___set_format____doc__},
+    {"__set_format__", (PyCFunction)(void(*)(void))float___set_format__, METH_FASTCALL|METH_CLASS, float___set_format____doc__},
 
 static PyObject *
 float___set_format___impl(PyTypeObject *type, const char *typestr,
                           const char *fmt);
 
 static PyObject *
-float___set_format__(PyTypeObject *type, PyObject **args, Py_ssize_t nargs, PyObject *kwnames)
+float___set_format__(PyTypeObject *type, PyObject *const *args, Py_ssize_t nargs)
 {
     PyObject *return_value = NULL;
     const char *typestr;
@@ -275,10 +271,6 @@ float___set_format__(PyTypeObject *type, PyObject **args, Py_ssize_t nargs, PyOb
 
     if (!_PyArg_ParseStack(args, nargs, "ss:__set_format__",
         &typestr, &fmt)) {
-        goto exit;
-    }
-
-    if (!_PyArg_NoStackKeywords("__set_format__", kwnames)) {
         goto exit;
     }
     return_value = float___set_format___impl(type, typestr, fmt);
@@ -313,4 +305,4 @@ float___format__(PyObject *self, PyObject *arg)
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=dc6b0b67a7e40c93 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=091dd499f5386a6c input=a9049054013a1b77]*/
